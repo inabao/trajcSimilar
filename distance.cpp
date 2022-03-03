@@ -6,6 +6,7 @@
 
 double pointDistance(point p1, point p2) {
     return sqrt((p1.first - p2.first) * (p1.first - p2.first) + (p1.second - p2.second) * (p1.second - p2.second));
+//    return p1.first == p2.first ? 0:1;
 }
 
 
@@ -51,9 +52,9 @@ double distance(point p1, point p2) {
 double wedDistance(path path1, path path2, int start, int end) {
     auto distanceMatrix = new double[end - start + 1];
     auto distanceMatrixTmp = new double[end - start + 1];
-    distanceMatrix[0] = 0;
+    distanceMatrixTmp[0] = 0;
     for (int j = start + 1; j < end + 1; ++j) {
-        distanceMatrix[j - start] = distanceMatrix[j - start - 1] + distance(path2[j - 1], nullPoint);
+        distanceMatrixTmp[j - start] = distanceMatrixTmp[j - start - 1] + distance(path2[j - 1], nullPoint);
     }
     for (int i = 1; i < path1.size() + 1; ++i) {
         for (int j = start; j < end + 1; ++j) {
@@ -64,6 +65,36 @@ double wedDistance(path path1, path path2, int start, int end) {
             distanceMatrix[j - start] = min(distanceMatrixTmp[j - start - 1] + distance(path1[i-1], path2[j-1]),
                                                min(distanceMatrix[j - start - 1] + distance(nullPoint, path2[j-1]),
                                                    distanceMatrixTmp[j - start] + distance(nullPoint, path1[i-1])));
+        }
+        for (int j = 0; j < end + 1; ++j) {
+            cout << distanceMatrix[j] << " ";
+        }
+        cout << endl;
+        swap(distanceMatrixTmp, distanceMatrix);
+    }
+    double result = distanceMatrixTmp[end - start];
+    delete[] distanceMatrix;
+    delete[] distanceMatrixTmp;
+    return result;
+}
+
+double dtwDistance(path path1, path path2, int start, int end) {
+    auto distanceMatrix = new double[end - start + 1];
+    auto distanceMatrixTmp = new double[end - start + 1];
+    double minDistance = 1000000;
+    distanceMatrixTmp[0] = 0;
+    for (int j = start + 1; j < end + 1; ++j) {
+        distanceMatrixTmp[j - start] = distanceMatrixTmp[j - start - 1] + pointDistance(path2[j - 1], path1[start]);
+    }
+    for (int i = 1; i < path1.size() + 1; ++i) {
+        for (int j = start; j < end + 1; ++j) {
+            if (j == start) {
+                distanceMatrix[0] = distanceMatrixTmp[0] + pointDistance(path1[i-1], path2[start]);
+                continue;
+            }
+            distanceMatrix[j - start] = min(distanceMatrixTmp[j - start - 1] + pointDistance(path1[i-1], path2[j-1]),
+                                            min(distanceMatrix[j - start - 1] + pointDistance(path1[i-1], path2[j-1]),
+                                                distanceMatrixTmp[j - start] + pointDistance(path1[i-1], path2[j-1])));
         }
         swap(distanceMatrixTmp, distanceMatrix);
     }

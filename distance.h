@@ -16,4 +16,5 @@ double pointDistance(point p1, point p2);
 double levenshteinDistance(point p1, point p2);
 double edr(point p1, point p2, double e=0);
 double wedDistance(path path1, path path2, int start, int end);
+double dtwDistance(path path1, path path2, int start, int end);
 #endif //TRAJCSIMILAR_DISTANCE_H

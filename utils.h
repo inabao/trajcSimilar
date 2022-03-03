@@ -19,4 +19,5 @@ vector<path> readfile(const string& filename);
 void file2paths(const string& filename, const string& target, int bound);
 vector<string> split(string str, string pattern);
 void paths2file(const string& filename, vector<path>);
+void ids2file(const string &filename, const map<int, subResult>& paths, int queryID);
 #endif //TRAJCSIMILAR_UTILS_H

@@ -86,9 +86,9 @@ vector<path> mostSimilarPointPrune(vector<path> paths, int query, const string& 
     vector<path> results;
     double lowerBound = MaxSimilar;
     vector<point> points;
-    points.push_back(queryPath[queryPath.size() / 4]);
-    points.push_back(queryPath[2 * queryPath.size() / 4]);
-    points.push_back(queryPath[3 * queryPath.size() / 4]);
+    for (int i = 0; i < keyNum; ++i) {
+        points.push_back(queryPath[(i + 1) * queryPath.size() / (keyNum + 1)]);
+    }
     for (int i = 0; i < paths.size(); ++i) {
         int b = queryPath.size() * lowBoundEstimate(points, paths[i], 2);
         if (i != query && paths[i].size() > queryPath.size() && lowerBound > b) {
@@ -133,7 +133,7 @@ vector<path> mostSimilar(vector<path> paths, int query, const string& algorithm,
 map<int, bool> multiLowBoundEstimate(map<int, vector<point>> points, const path& p, const vector<path>& paths,map<int, double> &lowerBounds, int skip) {
     map<int, vector<double>> result;
     for (const auto &item : points) {
-        result[item.first] = vector<double>(3, MaxSimilar);
+        result[item.first] = vector<double>(keyNum, MaxSimilar);
     }
     for (int i = 0; i < p.size(); i += skip) {
         for (auto & po : points) {
@@ -152,63 +152,120 @@ map<int, bool> multiLowBoundEstimate(map<int, vector<point>> points, const path&
     }
     return search;
 }
+int x_size;
+int y_size;
+
+inline int gps2gridid(double x, double y) {
+    int x_index = ceil((x - x_range[0]) / gridSize);
+    int y_index = ceil((y - y_range[0]) / gridSize);
+    return y_index * x_size + x_index;
+}
 
 
-
-
-map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<point>> points, const path& p, const vector<path>& paths,map<int, double> &lowerBounds, int skip) {
-    map<int, vector<double>> result;
+map<int, vector<int>> initGrid(const map<int, vector<point>>& points) {
+    map<int, vector<int>> pointGrid;
+    x_size = ceil((x_range[1] - x_range[0]) / gridSize) + 2;
+    y_size = ceil((y_range[1] - y_range[0]) / gridSize) + 2;
     for (const auto &item : points) {
-        result[item.first] = vector<double>(3, MaxSimilar);
+        for (int i = 0; i < keyNum; ++i) {
+            pointGrid[gps2gridid(item.second[i].second, item.second[i].first)].push_back(item.first);
+        }
     }
+    return pointGrid;
+}
+
+
+
+
+map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, const path& p, const vector<int>& querys, int skip) {
+    map<int, int> count;
     for (int i = 0; i < p.size(); i += skip) {
-        for (auto & po : points) {
-            for (int k = 0; k < 3; ++k) {
-                if (matricsType == "dtw") {
-                    result[po.first][k] = min(result[po.first][k], pointDistance(po.second[k], p[i]));
-                } else {
-                    result[po.first][k] = min(result[po.first][k], distance(po.second[k], p[i]));
+        auto gridid = gps2gridid(p[i].second, p[i].first);
+        for (int j = -1; j < 2; ++j) {
+            for (int k = -1; k < 2; ++k) {
+                int searchGridId = gridid + j * x_size + k;
+                if (pointGrid.count(searchGridId) > 0) {
+                    for (const auto &item : pointGrid[searchGridId]) {
+                        count[item] ++;
+                    }
                 }
+                pointGrid[searchGridId].clear();
             }
         }
     }
     map<int, bool> search;
-    for (const auto &item : result) {
-        search[item.first] = lowerBounds[item.first] > (accumulate(begin(item.second), end(item.second), 0.0) / item.second.size()) * paths[item.first].size();
+    for (const auto &item : querys) {
+        search[item] = count[item] > keyNum * fixRate;
     }
     return search;
 }
 
 
 
-map<int, vector<path>> multiSimilar(const vector<path>& paths, const vector<int>& querys, const string &algorithm, int limit) {
+map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int> querys, const string &algorithm, int limit) {
     subResult empty;
+    int cal = 0;
     empty.second = MaxSimilar;
+    map<int, vector<int>> pointGrid;
     map<int, vector<subResult>> record;
     map<int, vector<int>> pathId;
-    map<int, vector<path>> results;
+    map<int, map<int, subResult>> results;
     map<int, double> lowerBound;
     map<int, vector<point>> points;
-    for (const auto &item : querys) {
-        auto queryPath = paths[item];
-        points[item].push_back(paths[item][queryPath.size() / 4]);
-        points[item].push_back(paths[item][2 * queryPath.size() / 4]);
-        points[item].push_back(queryPath[3 * queryPath.size() / 4]);
-        lowerBound[item] = MaxSimilar;
+    map<int, path> queryPaths;
+    string targetFile = filepath;
+    {
+        targetFile.append(to_string(minLen));
+        targetFile.append("_");
+        targetFile.append(to_string(maxLen));
+        targetFile.append("_");
+        targetFile.append(matricsType);
+        targetFile.append("_result.txt");
+    }
+    ofstream ofs(targetFile, ios::app);
+    for (auto i = querys.begin(); i < querys.end(); ++i) {
+        if (paths[*i].size() < minLen) {
+            i = querys.erase(i);
+            i --;
+        } else if (paths[*i].size() > maxLen) {
+            path tmp(paths[*i].begin(), paths[*i].begin() + maxLen);
+            queryPaths[*i] = tmp;
+        } else {
+            queryPaths[*i] = paths[*i];
+        }
     }
 
+    for (const auto &item : querys) {
+        auto queryPath = queryPaths[item];
+        for (int i = 0; i < keyNum; ++i) {
+            points[item].push_back(queryPath[(i + 1) * queryPath.size() / (keyNum + 1)]);
+        }
+        lowerBound[item] = MaxSimilar;
+    }
+    if (gatherType == "gridbase") {
+        pointGrid = initGrid(points);
+    }
     for (int i = 0; i < paths.size(); ++i) {
-        auto multiLowBounds = multiLowBoundEstimate(points, paths[i], paths, lowerBound, 2);
+        map<int, bool> multiLowBounds;
+        if (gatherType == "gridbase") {
+            multiLowBounds = multiLowBoundEstimateGridBase(pointGrid, paths[i], querys, 2);
+        } else {
+            multiLowBounds = multiLowBoundEstimate(points, paths[i], paths, lowerBound, 2);
+        }
         for (const auto &query : querys) {
-            auto queryPath = paths[query];
+            auto queryPath = queryPaths[query];
             if (i != query && paths[i].size() > queryPath.size() && multiLowBounds[query]) {
                 auto res = execute(algorithm, queryPath, paths[i]);
+                cal ++;
                 bool flag = false;
                 for (int j = 0; j < record[query].size(); ++j) {
                     if (record[query][j].second > res.second) {
                         record[query].insert(record[query].begin() + j, res);
                         pathId[query].insert(pathId[query].begin() + j, i);
                         flag = true;
+                        if (generateResult) {
+                            ofs << query << "," << i << "," << res.first.first << "," << res.first.second << "," << res.second << endl;
+                        }
                         break;
                     }
                 }
@@ -221,22 +278,13 @@ map<int, vector<path>> multiSimilar(const vector<path>& paths, const vector<int>
 
         }
     }
+    ofs.close();
     for (const auto &query : querys) {
-        for (int i = 0; i < limit; ++i) {
-            path tmp(paths[pathId[query][i]].begin() + record[query][i].first.first, paths[pathId[query][i]].begin() + record[query][i].first.second + 1);
-            results[query].push_back(tmp);
-            results[query].push_back(paths[pathId[query][i]]);
+        if (pathId[query].empty()) continue;
+        for (int i = 0; i < min(limit, (int)pathId[query].size()); ++i) {
+            results[query][pathId[query][i]] = record[query][i];
         }
-        results[query].push_back(paths[query]);
     }
+    cout << cal << endl;
     return results;
-}
-
-map<int, vector<path>>
-multiSimilarNaive(const vector<path> &paths, const vector<int> &querys, const string &algorithm, int limit) {
-    map<int, vector<path>> results;
-    for (const auto &item : querys) {
-        results[item] = mostSimilar(paths, item, algorithm, limit);
-    }
-    return {};
 }

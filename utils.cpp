@@ -94,4 +94,13 @@ void paths2file(const string &filename, vector<path> paths) {
             ofs << setiosflags(ios::fixed) << setprecision(5) << item[i].first << " " << item[i].second << endl;
         }
     }
+    ofs.close();
+}
+
+void ids2file(const string &filename, const map<int, subResult>& paths, int queryID) {
+    ofstream ofs(filename, ios::app);
+    for (const auto &item : paths) {
+        ofs << queryID << "," << item.first << "," << item.second.first.first << "," << item.second.first.second << "," << item.second.second << endl;
+    }
+    ofs.close();
 }

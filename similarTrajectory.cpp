@@ -31,13 +31,13 @@ subResult efficientAlgorithmWED(path path1, path path2) {
         }
     }
     for (int i = 0; i < lenPath1; ++i) {
-//        cout << "from:  ";
+        //        cout << "from:  ";
         for (int j = 0; j < lenPath2; ++j) {
             if (i == 0) {
                 starts[j] = j;
                 allCost[j] = distance(path1[0], path2[j]);
             } else{
-//                int x = 0;
+                //                int x = 0;
                 if (j == 0) {
                     allCost[0] = min(allCostTmp[0] + distance(nullPoint, path1[i]), empty[i-1] + distance(path1[i], path2[0]));
                     starts[0] = 0;
@@ -50,18 +50,18 @@ subResult efficientAlgorithmWED(path path1, path path2) {
                 if (c1 >= c2) {
                     allCost[j] = c2;
                     starts[j] = startsTmp[j - 1];
-//                    x = 0;
+                    //                    x = 0;
                 } else {
                     allCost[j] = c1;
                     starts[j] = startsTmp[j];
-//                    x = 1;
+                    //                    x = 1;
                 }
                 if (c3 < allCost[j]) {
                     starts[j] = starts[j-1];
                     allCost[j] = c3;
-//                    x = -1;
+                    //                    x = -1;
                 }
-//                cout << x << " ";
+                //                cout << x << " ";
 
                 /*
                  * 8945128451248657
@@ -70,11 +70,11 @@ subResult efficientAlgorithmWED(path path1, path path2) {
 
             }
         }
-//        cout << endl;
-//        for (int j = 0; j < path2.size(); ++j) {
-//            cout << *(allCost + j) << " ";
-//        }
-//        cout << endl;
+        //        cout << endl;
+        //        for (int j = 0; j < path2.size(); ++j) {
+        //            cout << *(allCost + j) << " ";
+        //        }
+        //        cout << endl;
         swap(allCost,allCostTmp);
         swap(starts, startsTmp);
     }
@@ -129,7 +129,10 @@ subResult efficientAlgorithmDTW(path path1, path path2) {
                 } else {
                     starts[j] = startsTmp[j];
                 }
-                allCost[j] = min(allCostTmp[j], allCostTmp[j - 1]) + pointDistance(path1[i], path2[j]);
+                if (allCostTmp[j] > allCost[j-1] && allCostTmp[j - 1] > allCost[j-1]) {
+                    starts[j] = starts[j - 1];
+                }
+                allCost[j] = min(allCostTmp[j], min(allCostTmp[j - 1], allCost[j-1])) + pointDistance(path1[i], path2[j]);
             }
         }
         swap(allCost,allCostTmp);

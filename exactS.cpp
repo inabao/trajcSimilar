@@ -45,17 +45,17 @@ double exactDTW(path path1, path path2, int start, int end) {
     double minDistance = 1000000;
     distanceMatrixTmp[0] = 0;
     for (int j = start + 1; j < end + 1; ++j) {
-        distanceMatrixTmp[j - start] = distanceMatrixTmp[j - start - 1] + pointDistance(path2[j - 1], path1[0]);
+        distanceMatrixTmp[j - start] = distanceMatrixTmp[j - start - 1] + pointDistance(path2[j - 1], path1[start]);
     }
     for (int i = 1; i < path1.size() + 1; ++i) {
         for (int j = start; j < end + 1; ++j) {
             if (j == start) {
-                distanceMatrix[0] = distanceMatrixTmp[0] + pointDistance(path1[i-1], path2[0]);
+                distanceMatrix[0] = distanceMatrixTmp[0] + pointDistance(path1[i-1], path2[start]);
                 continue;
             }
             distanceMatrix[j - start] = min(distanceMatrixTmp[j - start - 1] + pointDistance(path1[i-1], path2[j-1]),
                                             min(distanceMatrix[j - start - 1] + pointDistance(path1[i-1], path2[j-1]),
-                                                distanceMatrixTmp[j - start] + pointDistance(path2[j-1], path1[i-1])));
+                                                distanceMatrixTmp[j - start] + pointDistance(path1[i-1], path2[j-1])));
         }
         swap(distanceMatrixTmp, distanceMatrix);
     }
@@ -65,6 +65,8 @@ double exactDTW(path path1, path path2, int start, int end) {
             minDistance = distanceMatrixTmp[i];
         }
     }
+    delete[] distanceMatrixTmp;
+    delete[] distanceMatrix;
     return minDistance;
 }
 
