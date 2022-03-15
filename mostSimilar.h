@@ -17,10 +17,13 @@ static double gridSize = 0.0001;
 static double keyNum = 10;
 static double fixRate = 0.6;
 
-static int maxLen = 100;
-static int minLen = 80;
+extern string matricsType;
+extern string pruningType;
+extern string gatherType;
+extern string dataType;
 
-
+extern int maxLen;
+extern int minLen;
 
 subResult execute(const string & algorithm, const path& p1, const path& p2);
 vector<path> mostSimilar(vector<path> paths, int query, const string& algorithm, int limit);

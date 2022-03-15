@@ -4,6 +4,17 @@
 
 #include "distance.h"
 
+
+
+string matricsType = "edr";
+string pruningType = "pointprune";
+string gatherType = "gridbase";
+string dataType = "xian";
+
+
+int maxLen = 100;
+int minLen = 80;
+
 double pointDistance(point p1, point p2) {
     return sqrt((p1.first - p2.first) * (p1.first - p2.first) + (p1.second - p2.second) * (p1.second - p2.second));
 //    return p1.first == p2.first ? 0:1;
@@ -15,10 +26,9 @@ double levenshteinDistance(point p1, point p2) {
     return 1;
 }
 
-double lcss(point p1, point p2) {
-    if (p1.first == p2.first && p1.second == p2.second) return 0;
-    if (p1.first == nullPoint.first) return 1;
-    return 2;
+double lcss(point p1, point p2, double e) {
+    if (abs(p1.first - p2.first) < e && abs(p1.second - p2.second) < e) return 0;
+    return 1;
 }
 
 double erp(point p1, point p2) {
@@ -41,9 +51,9 @@ double edr(point p1, point p2, double e) {
 
 double distance(point p1, point p2) {
     if (matricsType == "levenshteinDistance") return levenshteinDistance(p1, p2);
-    if (matricsType == "edr") return edr(p1, p2, 0.003);
+    if (matricsType == "edr") return edr(p1, p2, 0.0005);
     if (matricsType == "erp") return erp(p1, p2);
-    if (matricsType == "lcss") return lcss(p1, p2);
+    if (matricsType == "lcss") return lcss(p1, p2, 0.0005);
     return 0;
 }
 

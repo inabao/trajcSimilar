@@ -12,6 +12,8 @@ subResult execute(const string & algorithm, const path& p1, const path& p2){
         result = exactS(p1, p2);
     } else if (algorithm == "pss") {
         result = pss(p1, p2);
+    } else if (algorithm == "pos") {
+        result = pos(p1, p2);
     }
     return result;
 }
@@ -205,6 +207,7 @@ map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, co
 map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int> querys, const string &algorithm, int limit) {
     subResult empty;
     int cal = 0;
+    cout << pruningType << "  " << dataType << "  " << matricsType << "  " << minLen << "  " << maxLen << "  " << algorithm << endl;
     empty.second = MaxSimilar;
     map<int, vector<int>> pointGrid;
     map<int, vector<subResult>> record;
@@ -214,14 +217,14 @@ map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int
     map<int, vector<point>> points;
     map<int, path> queryPaths;
     string targetFile = filepath;
-    {
+    if (generateResult){
         targetFile.append(to_string(minLen));
         targetFile.append("_");
         targetFile.append(to_string(maxLen));
         targetFile.append("_");
         targetFile.append(matricsType);
-        targetFile.append("_result.txt");
     }
+    targetFile.append("_result.txt");
     ofstream ofs(targetFile, ios::app);
     for (auto i = querys.begin(); i < querys.end(); ++i) {
         if (paths[*i].size() < minLen) {
@@ -245,6 +248,7 @@ map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int
     if (gatherType == "gridbase") {
         pointGrid = initGrid(points);
     }
+
     for (int i = 0; i < paths.size(); ++i) {
         map<int, bool> multiLowBounds;
         if (gatherType == "gridbase") {
@@ -263,11 +267,11 @@ map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int
                         record[query].insert(record[query].begin() + j, res);
                         pathId[query].insert(pathId[query].begin() + j, i);
                         flag = true;
-                        if (generateResult) {
-                            ofs << query << "," << i << "," << res.first.first << "," << res.first.second << "," << res.second << endl;
-                        }
                         break;
                     }
+                }
+                if (generateResult) {
+                    ofs << query << "," << i << "," << res.first.first << "," << res.first.second << "," << res.second << endl;
                 }
                 if (!flag && record[query].size() < limit) {
                     pathId[query].push_back(i);
@@ -278,13 +282,14 @@ map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int
 
         }
     }
-    ofs.close();
+    if (generateResult) {
+        ofs.close();
+    }
     for (const auto &query : querys) {
         if (pathId[query].empty()) continue;
         for (int i = 0; i < min(limit, (int)pathId[query].size()); ++i) {
             results[query][pathId[query][i]] = record[query][i];
         }
     }
-    cout << cal << endl;
     return results;
 }

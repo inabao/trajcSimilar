@@ -9,4 +9,11 @@
 subResult exactS(const path& p1, const path& p2);
 
 
+extern string matricsType;
+extern string pruningType;
+extern string gatherType;
+extern string dataType;
+
+//extern int maxLen;
+//extern int minLen;
 #endif //TRAJCSIMILAR_EXACTS_H

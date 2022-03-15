@@ -15,6 +15,13 @@ using namespace std;
 
 path str2path(const string &s);
 
+extern string matricsType;
+extern string pruningType;
+extern string gatherType;
+extern string dataType;
+
+//extern int maxLen;
+//extern int minLen;
 vector<path> readfile(const string& filename);
 void file2paths(const string& filename, const string& target, int bound);
 vector<string> split(string str, string pattern);

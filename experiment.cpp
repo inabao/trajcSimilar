@@ -4,6 +4,8 @@
 
 #include "experiment.h"
 
+#include <utility>
+
 long nowTime(){
     struct timeval curTime{};
     gettimeofday(&curTime, nullptr);
@@ -39,10 +41,11 @@ void findMultiMostSimilar(const vector<path>& paths, vector<int>& querys, const 
     auto time_start = nowTime();
     auto results = multiSimilar(paths, querys, algorithm, limit);
     auto time_end = nowTime();
-
-    ofstream ofs(targetFile + to_string(time_start) + "findMostSimilar");
-    ofs << "algorithm:" << algorithm << " queryLength:" << querys.size() <<  " datasize:" <<
-    paths.size() <<" cost:" << time_end - time_start << endl;
+    ofstream ofs(targetFile + matricsType + "_" + dataType + "_" + algorithm + "_" + pruningType + "_" + to_string(minLen) + "_" +
+                         to_string(maxLen));
+    ofs << "matric:" << matricsType << ",dataset:" << dataType << ",pruningType:" << pruningType << ",algorithm:"
+    << algorithm << ",queryLength:" << to_string(minLen) + "-" + to_string(maxLen) << ",querySize:" << querys.size() <<  ",datasize:" <<
+    paths.size() <<",cost:" << time_end - time_start << endl;
     double score = 0;
     for (const auto &item : results) {
         double minScore = MaxSimilar;
@@ -52,16 +55,44 @@ void findMultiMostSimilar(const vector<path>& paths, vector<int>& querys, const 
         score += minScore;
         ofs << "pathId:" << item.first << "    score:" << minScore << endl;
     }
-    cout << score << endl;
-//    targetFile.append(to_string(minLen));
-//    targetFile.append("_");
-//    targetFile.append(to_string(maxLen));
-//    targetFile.append("_");
-//    targetFile.append(matricsType);
-//    targetFile.append("_result.txt");
-//    for (const auto &item : results) {
-//        ids2file(targetFile, item.second, item.first);
-//    }
+    if (generateResult) {
+        targetFile.append("similar_");
+        targetFile.append(to_string(minLen));
+        targetFile.append("_");
+        targetFile.append(to_string(maxLen));
+        targetFile.append("_");
+        targetFile.append(matricsType);
+        targetFile.append("_result.txt");
+        for (const auto &item : results) {
+            ids2file(targetFile, item.second, item.first);
+        }
+    }
+}
+
+
+void varyLength(int l, int r, string dataset) {
+    minLen = l, maxLen = r;
+    vector<int> querys;
+    querys.reserve(100);
+    for (int i = 0; i < 100; ++i) {
+        querys.push_back(i);
+    }
+    vector<string> varyPrune{"gridbase", "none"};
+    vector<string> metrics{"edr","dtw","erp"};
+    char targetString[1024];
+    dataType = dataset;
+    for (const auto &pr : varyPrune) {
+        pruningType = pr;
+        for (const auto &item : metrics) {
+            matricsType = item;
+            snprintf(targetString, sizeof targetString, datasource, dataType.c_str());
+            string tmp(targetString);
+            auto paths = readfile(tmp);
+            findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath, 1);
+            findMultiMostSimilar(paths, querys, "pss", filepath, 1);
+            findMultiMostSimilar(paths, querys, "pos", filepath, 1);
+        }
+    }
 }
 
 

@@ -10,6 +10,9 @@
 #include <numeric>
 #include "constant.h"
 using namespace std;
+
+//extern int maxLen;
+//extern int minLen;
 double distance(point p1, point p2);
 
 double pointDistance(point p1, point p2);
