@@ -158,8 +158,8 @@ subResult pss(const path& path1, const path& path2) {
 }
 
 
-int d = 10;
-
+int d = 0;
+int max_d = 10;
 
 subResult posWED(path p1, path p2) {
     int start = 0;
@@ -187,7 +187,7 @@ subResult posWED(path p1, path p2) {
             d = 0;
         } else {
             d ++;
-            if (d > 5 && pssstart == start){
+            if (d > max_d && pssstart == start){
                 start = pssend + 1;
                 j = start;
                 d = 0;
@@ -233,6 +233,13 @@ subResult posDTW(path p1, path p2) {
             pssstart = start;
             pssend = j - 1;
             start = j;
+        } else {
+            d ++;
+            if (d > max_d && pssstart == start){
+                start = pssend + 1;
+                j = start;
+                d = 0;
+            }
         }
         swap(distanceMatrixReverseTmp, distanceMatrixReverse);
     }

@@ -25,18 +25,18 @@ int main() {
 //        querys.clear();
 //    }
 
-//    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
-//    path p1 = paths[3];
-//    int i = 0;
-//    //    path p2 = paths[43];
-//    for (auto & p2 : paths) {
-//        if (p2.size() < 10) continue;
-//        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
-//        showResult("efficientAlgorithm", p1, p2);
-////        showResult("exactS", p1, p2);
-//        showResult("pos", p1, p2);
-//        showResult("pss", p1, p2);
-//    }
+    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
+    path p1 = paths[3];
+    int i = 0;
+    //    path p2 = paths[43];
+    for (auto & p2 : paths) {
+        if (p2.size() < 10) continue;
+        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
+        showResult("efficientAlgorithm", p1, p2);
+//        showResult("exactS", p1, p2);
+        showResult("pos", p1, p2);
+        showResult("pss", p1, p2);
+    }
 
 
 

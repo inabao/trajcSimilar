@@ -6,7 +6,7 @@
 
 
 
-string matricsType = "erp";
+string matricsType = "dtw";
 string pruningType = "pointprune";
 string gatherType = "gridbase";
 string dataType = "xian";
