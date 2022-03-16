@@ -14,7 +14,7 @@ int main() {
     // 生成训练集
 //    auto paths = readfile(datasource);
 //    vector<int> querys;
-//    for (int i = 0; i < 100; ++i) {
+//    for (int i = 0; i < 1; ++i) {
 //        for (int j = 0; j < 100; ++j) {
 //            querys.push_back(i * 100 + j);
 //        }
@@ -25,20 +25,35 @@ int main() {
 //        querys.clear();
 //    }
 
+//    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
+//    path p1 = paths[3];
+//    int i = 0;
+//    //    path p2 = paths[43];
+//    for (auto & p2 : paths) {
+//        if (p2.size() < 10) continue;
+//        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
+//        showResult("efficientAlgorithm", p1, p2);
+////        showResult("exactS", p1, p2);
+//        showResult("pos", p1, p2);
+//        showResult("pss", p1, p2);
+//    }
 
-    char targetString[1024];
-    vector<string> datas{"xian"};
-    for (const auto &item : datas) {
-        dataType = item;
-        cout << item << endl;
-        snprintf(targetString, sizeof targetString, datasource, item.c_str());
-        string tmp(targetString);
-        dataFilter(targetString);
-        cout << endl;
-        cout << endl;
-        cout << endl;
-        cout << endl;
-    }
+
+
+
+//    char targetString[1024];
+//    vector<string> datas{"xian"};
+//    for (const auto &item : datas) {
+//        dataType = item;
+//        cout << item << endl;
+//        snprintf(targetString, sizeof targetString, datasource, item.c_str());
+//        string tmp(targetString);
+//        dataFilter(targetString);
+//        cout << endl;
+//        cout << endl;
+//        cout << endl;
+//        cout << endl;
+//    }
 //    varyLength(8, 12, "porto");
 //    varyLength(12, 16, "porto");
 //    varyLength(16, 20, "porto");

@@ -5,8 +5,8 @@
 #include <algorithm>
 #include "pss.h"
 
-int pssstart = 0;
-int pssend = 0;
+int pssstart = -1;
+int pssend = -1;
 
 subResult pssWED(path p1, path p2) {
 
@@ -158,6 +158,9 @@ subResult pss(const path& path1, const path& path2) {
 }
 
 
+int d = 10;
+
+
 subResult posWED(path p1, path p2) {
     int start = 0;
     double bestScore = 100000000;
@@ -181,7 +184,14 @@ subResult posWED(path p1, path p2) {
             bestScore = theta1;
             pssstart = start;
             pssend = j - 1;
-            start = j;
+            d = 0;
+        } else {
+            d ++;
+            if (d > 5 && pssstart == start){
+                start = pssend + 1;
+                j = start;
+                d = 0;
+            }
         }
         swap(distanceMatrix, distanceMatrixReverse);
     }
@@ -207,7 +217,7 @@ subResult posDTW(path p1, path p2) {
         if (j == start + 1) {
             distanceMatrixReverseTmp[0] = 0;
             for (int i = 1; i < p1.size() + 1; ++i) {
-                distanceMatrixReverseTmp[i] = distanceMatrixReverseTmp[i-1] + pointDistance(p1[i-1], nullPoint);
+                distanceMatrixReverseTmp[i] = distanceMatrixReverseTmp[i-1] + pointDistance(p1[i-1], p2[start]);
             }
         }
         distanceMatrixReverse[0] = distanceMatrixReverseTmp[0] + pointDistance(p2[j - 1], p1[start]);
@@ -218,6 +228,7 @@ subResult posDTW(path p1, path p2) {
         }
         double theta1 = distanceMatrixReverse[p1.size()];
         if (theta1 < bestScore) {
+
             bestScore = theta1;
             pssstart = start;
             pssend = j - 1;
