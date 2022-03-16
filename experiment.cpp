@@ -78,7 +78,7 @@ void varyLength(int l, int r, string dataset) {
         querys.push_back(i);
     }
     vector<string> varyPrune{"gridbase", "none"};
-    vector<string> metrics{"edr","dtw","erp"};
+    vector<string> metrics{"edr", "dtw", "erp"};
     char targetString[1024];
     dataType = dataset;
     for (const auto &pr : varyPrune) {

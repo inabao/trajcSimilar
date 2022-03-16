@@ -48,6 +48,8 @@ void file2paths(const string &filename, const string& target, int bound = -1) {
         pair<int, pair<double, double>> tt = {t_index, {latitude, longitude}};
         tmp_data[strs[1]].push_back(tt);
     }
+    ifs.close();
+    ofs.close();
     cout << trajectoryCount << endl;
 }
 
@@ -102,5 +104,80 @@ void ids2file(const string &filename, const map<int, subResult>& paths, int quer
     for (const auto &item : paths) {
         ofs << queryID << "," << item.first << "," << item.second.first.first << "," << item.second.first.second << "," << item.second.second << endl;
     }
+    ofs.close();
+}
+
+
+void dataAnalize(const string& filename) {
+    int count = 0;
+    double avg_length = 0;
+    double avg_lat = 0;
+    double avg_lon = 0;
+    double max_lat = -10000;
+    double min_lat = 10000;
+    double max_lon = -10000;
+    double min_lon = 10000;
+
+    int point_num;
+    ifstream ifs(filename);
+    while (!ifs.eof()) {
+        int time_index;
+        double lat, lon;
+        ifs >> point_num;
+        for (int i = 0; i < point_num; ++i) {
+            ifs >> time_index >> lat >> lon;
+
+        }
+        avg_length = (count * avg_length + point_num) / (count + 1);
+        avg_lat = (count * avg_lat + lat) / (count + 1);
+        avg_lon = (count * avg_lon + lon) / (count + 1);
+        count += 1;
+        max_lat = max(max_lat, lat);
+        min_lat = min(min_lat, lat);
+        max_lon = max(max_lon, lon);
+        min_lon = min(min_lon, lon);
+    }
+    cout << "avgLen:" << avg_length << endl;
+    cout << "count:" << count << endl;
+    cout << "max_lat:" << max_lat << endl;
+    cout << "min_lat:" << min_lat << endl;
+    cout << "avg_lat:" << avg_lat << endl;
+    cout << "max_lon:" << max_lon << endl;
+    cout << "min_lon:" << min_lon << endl;
+    cout << "avg_lon:" << avg_lon << endl;
+}
+
+void dataFilter(const string &filename) {
+    int point_num;
+    int count = 0;
+    ifstream ifs(filename);
+    ofstream ofs(filename + "Tmp");
+
+    while (!ifs.eof()) {
+        int time_index;
+        bool flag = true;
+        double lat, lon;
+        path p;
+        ifs >> point_num;
+        for (int i = 0; i < point_num; ++i) {
+            ifs >> time_index >> lat >> lon;
+
+            if (range[dataType].first[0] > lat || lat > range[dataType].first[1]){
+                flag = false;
+            }
+            if (range[dataType].second[0] > lon || lon > range[dataType].second[1]){
+                flag = false;
+            }
+            p.emplace_back(lat, lon);
+        }
+        if (!flag) continue;
+        count ++;
+        ofs << p.size() << endl;
+        for (auto & i : p) {
+            ofs << setiosflags(ios::fixed) << setprecision(5) << time_index << " " << i.first << " " << i.second << endl;
+        }
+    }
+    cout << count << endl;
+    ifs.close();
     ofs.close();
 }

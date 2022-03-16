@@ -5,12 +5,17 @@
 #ifndef TRAJCSIMILAR_CONSTANT_H
 #define TRAJCSIMILAR_CONSTANT_H
 #include "distance.h"
+#include "map"
 using namespace std;
 typedef pair<double,double> point;
 typedef vector<point> path;
 typedef pair<pair<int, int>, double> subResult;
-const static vector<double> x_range = {108.89, 109.01};
-const static vector<double> y_range = {34.19, 34.29};
+
+static map<string , pair<vector<double>, vector<double>>> range{
+    {"xian", {{34.20, 34.29}, {108.91, 109.00}}},
+    {"chengdu", {{30.65, 30.73}, {104.04, 104.13}}},
+    {"porto", {{41.11, 41.19}, {-8.67, -8.57}}}
+};
 
 
 static bool generateResult = false;

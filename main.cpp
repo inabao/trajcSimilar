@@ -10,19 +10,6 @@ int main() {
 //     数据处理
 //     file2paths(R"(E:\project\work\Xian_data\gps_20161001)", R"(E:\project\work\Xian_data\trajectory\tra_20161001)", 666);
 
-//    算法性能探究
-    auto paths = readfile(R"(E:\project\work\Xian_data\trajectory\tra_20161001)");
-    path p1 = paths[3];
-    int i = 0;
-//    path p2 = paths[43];
-    for (auto & p2 : paths) {
-        if (p2.size() < 10) continue;
-        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
-        showResult("efficientAlgorithm", p1, p2);
-//        showResult("exactS", p1, p2);
-        showResult("pss", p1, p2);
-        showResult("pos", p1, p2);
-    }
 
     // 生成训练集
 //    auto paths = readfile(datasource);
@@ -38,6 +25,20 @@ int main() {
 //        querys.clear();
 //    }
 
+
+    char targetString[1024];
+    vector<string> datas{"xian"};
+    for (const auto &item : datas) {
+        dataType = item;
+        cout << item << endl;
+        snprintf(targetString, sizeof targetString, datasource, item.c_str());
+        string tmp(targetString);
+        dataFilter(targetString);
+        cout << endl;
+        cout << endl;
+        cout << endl;
+        cout << endl;
+    }
 //    varyLength(8, 12, "porto");
 //    varyLength(12, 16, "porto");
 //    varyLength(16, 20, "porto");

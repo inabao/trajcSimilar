@@ -158,19 +158,19 @@ int x_size;
 int y_size;
 
 inline int gps2gridid(double x, double y) {
-    int x_index = ceil((x - x_range[0]) / gridSize);
-    int y_index = ceil((y - y_range[0]) / gridSize);
+    int x_index = ceil((x - range[dataType].first[0]) / gridSize);
+    int y_index = ceil((y - range[dataType].second[0]) / gridSize);
     return y_index * x_size + x_index;
 }
 
 
 map<int, vector<int>> initGrid(const map<int, vector<point>>& points) {
     map<int, vector<int>> pointGrid;
-    x_size = ceil((x_range[1] - x_range[0]) / gridSize) + 2;
-    y_size = ceil((y_range[1] - y_range[0]) / gridSize) + 2;
+    x_size = ceil((range[dataType].first[1] - range[dataType].first[0]) / gridSize) + 2;
+    y_size = ceil((range[dataType].second[1] - range[dataType].second[0]) / gridSize) + 2;
     for (const auto &item : points) {
         for (int i = 0; i < keyNum; ++i) {
-            pointGrid[gps2gridid(item.second[i].second, item.second[i].first)].push_back(item.first);
+            pointGrid[gps2gridid(item.second[i].first, item.second[i].second)].push_back(item.first);
         }
     }
     return pointGrid;
@@ -182,7 +182,7 @@ map<int, vector<int>> initGrid(const map<int, vector<point>>& points) {
 map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, const path& p, const vector<int>& querys, int skip) {
     map<int, int> count;
     for (int i = 0; i < p.size(); i += skip) {
-        auto gridid = gps2gridid(p[i].second, p[i].first);
+        auto gridid = gps2gridid(p[i].first, p[i].second);
         for (int j = -1; j < 2; ++j) {
             for (int k = -1; k < 2; ++k) {
                 int searchGridId = gridid + j * x_size + k;
