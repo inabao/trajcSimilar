@@ -93,7 +93,7 @@ subResult pssDTW(path p1, path p2) {
     for (int i = 1; i < p1.size() + 1; ++i) {
         for (int j = start; j < end + 1; ++j) {
             if (j == start) {
-                distanceMatrix[0] = distanceMatrixTmp[0] + pointDistance(p1[i-1], p2[0]);
+                distanceMatrix[0] = distanceMatrixTmp[0] + pointDistance(p1[i-1], p2[start]);
                 continue;
             }
             distanceMatrix[j - start] = min(distanceMatrixTmp[j - start - 1] + pointDistance(p1[i-1], p2[j-1]),
@@ -117,7 +117,7 @@ subResult pssDTW(path p1, path p2) {
                 distanceMatrixReverseTmp[i] = distanceMatrixReverseTmp[i-1] + pointDistance(p1[i-1], p2[start]);
             }
         }
-        distanceMatrixReverse[0] = distanceMatrixReverseTmp[0] + pointDistance(p2[j - 1], p1[start]);
+        distanceMatrixReverse[0] = distanceMatrixReverseTmp[0] + pointDistance(p2[j - 1], p1[0]);
         for (int i = 1; i < p1.size() + 1; ++i) {
             distanceMatrixReverse[i] = min(distanceMatrixReverseTmp[i-1] + pointDistance(p1[i-1], p2[j-1]),
                                            min(distanceMatrixReverseTmp[i] + pointDistance(p1[i-1], p2[j-1]),
@@ -212,7 +212,6 @@ subResult posDTW(path p1, path p2) {
 
     auto distanceMatrixReverse = new double[p1.size() + 1];
     auto distanceMatrixReverseTmp = new double[p1.size() + 1];
-
     for (int j = 1; j < p2.size() + 1; ++j) {
         if (j == start + 1) {
             distanceMatrixReverseTmp[0] = 0;
@@ -220,7 +219,7 @@ subResult posDTW(path p1, path p2) {
                 distanceMatrixReverseTmp[i] = distanceMatrixReverseTmp[i-1] + pointDistance(p1[i-1], p2[start]);
             }
         }
-        distanceMatrixReverse[0] = distanceMatrixReverseTmp[0] + pointDistance(p2[j - 1], p1[start]);
+        distanceMatrixReverse[0] = distanceMatrixReverseTmp[0] + pointDistance(p2[j - 1], p1[0]);
         for (int i = 1; i < p1.size() + 1; ++i) {
             distanceMatrixReverse[i] = min(distanceMatrixReverseTmp[i-1] + pointDistance(p1[i-1], p2[j-1]),
                                            min(distanceMatrixReverseTmp[i] + pointDistance(p1[i-1], p2[j-1]),
