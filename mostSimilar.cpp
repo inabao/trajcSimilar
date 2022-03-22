@@ -204,7 +204,7 @@ map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, co
 
 
 
-map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int> querys, const string &algorithm, int limit) {
+map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<path>& paths, vector<int> querys, const string &algorithm, int limit) {
     subResult empty;
     int cal = 0;
     cout << pruningType << "  " << dataType << "  " << matricsType << "  " << minLen << "  " << maxLen << "  " << algorithm << endl;
@@ -212,7 +212,7 @@ map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int
     map<int, vector<int>> pointGrid;
     map<int, vector<subResult>> record;
     map<int, vector<int>> pathId;
-    map<int, map<int, subResult>> results;
+    map<int, map<int, pair<vector<double>,subResult>>> results;
     map<int, double> lowerBound;
     map<int, vector<point>> points;
     map<int, path> queryPaths;
@@ -287,8 +287,17 @@ map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int
     }
     for (const auto &query : querys) {
         if (pathId[query].empty()) continue;
+        pair<int, subResult> r;
         for (int i = 0; i < min(limit, (int)pathId[query].size()); ++i) {
-            results[query][pathId[query][i]] = record[query][i];
+            if (i == 0 || r.second.second < record[query][i].second) {
+                r.first = pathId[query][i];
+                r.second = record[query][i];
+            }
+            results[query][pathId[query][i]].second = record[query][i];
+            calScore(queryPaths[query], paths[r.first], r.second.first.first, r.second.first.second + 1);
+            results[query][pathId[query][i]].first.push_back(AR);
+            results[query][pathId[query][i]].first.push_back(MR);
+            results[query][pathId[query][i]].first.push_back(RR);
         }
     }
     return results;

@@ -27,6 +27,6 @@ extern int minLen;
 
 subResult execute(const string & algorithm, const path& p1, const path& p2);
 vector<path> mostSimilar(vector<path> paths, int query, const string& algorithm, int limit);
-map<int, map<int, subResult>> multiSimilar(const vector<path>& paths, vector<int> querys, const string& algorithm, int limit);
+map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<path>& paths, vector<int> querys, const string& algorithm, int limit);
 
 #endif //TRAJCSIMILAR_MOSTSIMILAR_H

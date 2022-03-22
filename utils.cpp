@@ -99,10 +99,10 @@ void paths2file(const string &filename, vector<path> paths) {
     ofs.close();
 }
 
-void ids2file(const string &filename, const map<int, subResult>& paths, int queryID) {
+void ids2file(const string &filename, const map<int, pair<vector<double>, subResult>>& paths, int queryID) {
     ofstream ofs(filename, ios::app);
     for (const auto &item : paths) {
-        ofs << queryID << "," << item.first << "," << item.second.first.first << "," << item.second.first.second << "," << item.second.second << endl;
+        ofs << queryID << "," << item.first << "," << item.second.second.first.first << "," << item.second.second.first.second << "," << item.second.second.second << endl;
     }
     ofs.close();
 }
@@ -171,6 +171,35 @@ void dataFilter(const string &filename) {
             p.emplace_back(lat, lon);
         }
         if (!flag) continue;
+        count ++;
+        ofs << p.size() << endl;
+        for (auto & i : p) {
+            ofs << setiosflags(ios::fixed) << setprecision(5) << time_index << " " << i.first << " " << i.second << endl;
+        }
+    }
+    cout << count << endl;
+    ifs.close();
+    ofs.close();
+}
+
+
+void dataLengthFilter(const string &filename, int minLen, int maxLen, int num) {
+    int point_num;
+    int count = 0;
+    ifstream ifs(filename);
+    ofstream ofs(filename + "_" + to_string(minLen) + "_" + to_string(maxLen));
+
+    while (!ifs.eof()) {
+        int time_index;
+        bool flag = true;
+        double lat, lon;
+        path p;
+        ifs >> point_num;
+        for (int i = 0; i < point_num; ++i) {
+            ifs >> time_index >> lat >> lon;
+            p.emplace_back(lat, lon);
+        }
+        if (point_num > maxLen || point_num < minLen || count >= num) continue;
         count ++;
         ofs << p.size() << endl;
         for (auto & i : p) {

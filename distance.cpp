@@ -3,10 +3,10 @@
 //
 
 #include "distance.h"
+#include "exactS.h"
 
 
-
-string matricsType = "dtw";
+string matricsType = "erp";
 string pruningType = "pointprune";
 string gatherType = "gridbase";
 string dataType = "xian";
@@ -14,6 +14,14 @@ string dataType = "xian";
 
 int maxLen = 100;
 int minLen = 80;
+
+
+double AR = 0;
+double MR = 0;
+double RR = 0;
+
+
+
 
 double pointDistance(point p1, point p2) {
     return sqrt((p1.first - p2.first) * (p1.first - p2.first) + (p1.second - p2.second) * (p1.second - p2.second));
@@ -76,10 +84,6 @@ double wedDistance(path path1, path path2, int start, int end) {
                                                min(distanceMatrix[j - start - 1] + distance(nullPoint, path2[j-1]),
                                                    distanceMatrixTmp[j - start] + distance(nullPoint, path1[i-1])));
         }
-        for (int j = 0; j < end + 1; ++j) {
-            cout << distanceMatrix[j] << " ";
-        }
-        cout << endl;
         swap(distanceMatrixTmp, distanceMatrix);
     }
     double result = distanceMatrixTmp[end - start];
@@ -91,10 +95,9 @@ double wedDistance(path path1, path path2, int start, int end) {
 double dtwDistance(path path1, path path2, int start, int end) {
     auto distanceMatrix = new double[end - start + 1];
     auto distanceMatrixTmp = new double[end - start + 1];
-    double minDistance = 1000000;
     distanceMatrixTmp[0] = 0;
     for (int j = start + 1; j < end + 1; ++j) {
-        distanceMatrixTmp[j - start] = distanceMatrixTmp[j - start - 1] + pointDistance(path2[j - 1], path1[start]);
+        distanceMatrixTmp[j - start] = distanceMatrixTmp[j - start - 1] + pointDistance(path2[j - 1], path1[0]);
     }
     for (int i = 1; i < path1.size() + 1; ++i) {
         for (int j = start; j < end + 1; ++j) {
