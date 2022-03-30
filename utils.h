@@ -18,7 +18,6 @@ path str2path(const string &s);
 
 extern string matricsType;
 extern string pruningType;
-extern string gatherType;
 extern string dataType;
 //extern int maxLen;
 //extern int minLen;

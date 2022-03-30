@@ -4,6 +4,9 @@
 
 #include "mostSimilar.h"
 
+long evaluateTime = 0;
+long algorithmTime = 0;
+
 subResult execute(const string & algorithm, const path& p1, const path& p2){
     subResult result;
     if (algorithm == "efficientAlgorithm") {
@@ -18,6 +21,12 @@ subResult execute(const string & algorithm, const path& p1, const path& p2){
     return result;
 }
 
+long nowTime(){
+    struct timeval curTime{};
+    gettimeofday(&curTime, nullptr);
+    long milli = curTime.tv_usec  + curTime.tv_sec * 1000 * 1000;
+    return milli;
+}
 
 
 
@@ -135,11 +144,11 @@ vector<path> mostSimilar(vector<path> paths, int query, const string& algorithm,
 map<int, bool> multiLowBoundEstimate(map<int, vector<point>> points, const path& p, const vector<path>& paths,map<int, double> &lowerBounds, int skip) {
     map<int, vector<double>> result;
     for (const auto &item : points) {
-        result[item.first] = vector<double>(keyNum, MaxSimilar);
+        result[item.first] = vector<double>(filterNum, MaxSimilar);
     }
     for (int i = 0; i < p.size(); i += skip) {
         for (auto & po : points) {
-            for (int k = 0; k < 3; ++k) {
+            for (int k = 0; k < filterNum; ++k) {
                 if (matricsType == "dtw") {
                     result[po.first][k] = min(result[po.first][k], pointDistance(po.second[k], p[i]));
                 } else {
@@ -207,6 +216,8 @@ map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, co
 map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<path>& paths, vector<int> querys, const string &algorithm, int limit) {
     subResult empty;
     int cal = 0;
+    evaluateTime = 0;
+    algorithmTime = 0;
     cout << pruningType << "  " << dataType << "  " << matricsType << "  " << minLen << "  " << maxLen << "  " << algorithm << endl;
     empty.second = MaxSimilar;
     map<int, vector<int>> pointGrid;
@@ -240,8 +251,9 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
 
     for (const auto &item : querys) {
         auto queryPath = queryPaths[item];
-        for (int i = 0; i < keyNum; ++i) {
-            points[item].push_back(queryPath[(i + 1) * queryPath.size() / (keyNum + 1)]);
+        auto k = gatherType == "gridbase" ? keyNum : filterNum;
+        for (int i = 0; i < k; ++i) {
+            points[item].push_back(queryPath[(i + 1) * queryPath.size() / (k + 1)]);
         }
         lowerBound[item] = MaxSimilar;
     }
@@ -259,7 +271,10 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
         for (const auto &query : querys) {
             auto queryPath = queryPaths[query];
             if (i != query && paths[i].size() > queryPath.size() && multiLowBounds[query]) {
+                auto startTime = nowTime();
                 auto res = execute(algorithm, queryPath, paths[i]);
+                auto endTime = nowTime();
+                algorithmTime += endTime - startTime;
                 cal ++;
                 bool flag = false;
                 for (int j = 0; j < record[query].size(); ++j) {
@@ -285,6 +300,7 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
     if (generateResult) {
         ofs.close();
     }
+    long evaluateStart = nowTime();
     for (const auto &query : querys) {
         if (pathId[query].empty()) continue;
         pair<int, subResult> r;
@@ -294,11 +310,14 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
                 r.second = record[query][i];
             }
             results[query][pathId[query][i]].second = record[query][i];
+            AR = r.second.second;
             calScore(queryPaths[query], paths[r.first], r.second.first.first, r.second.first.second + 1);
             results[query][pathId[query][i]].first.push_back(AR);
             results[query][pathId[query][i]].first.push_back(MR);
             results[query][pathId[query][i]].first.push_back(RR);
         }
     }
+    long evaluateEnd = nowTime();
+    evaluateTime = evaluateEnd - evaluateStart;
     return results;
 }

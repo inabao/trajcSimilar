@@ -29,6 +29,7 @@ double exactWedDistance(path path1, path path2, int start, int end) {
         swap(distanceMatrixTmp, distanceMatrix);
     }
     for (int i = 1; i < end - start + 1; ++i) {
+        if (distanceMatrixTmp[i] < AR) MR += 1;
         if (distanceMatrixTmp[i] < minDistance) {
             tmpend = i - 1;
             minDistance = distanceMatrixTmp[i];
@@ -136,13 +137,7 @@ subResult exactS(const path& p1, const path& p2) {
 
 
 void calScore(const path& p1, const path& p2, int start, int end) {
-    AR = 0, MR = 0, RR = 0;
-    if (matricsType == "dtw") {
-        AR = dtwDistance(p1, p2, start, end);
-    } else if (matricsType == "lcss") {
-    } else {
-        AR = wedDistance(p1, p2, start, end);
-    }
+    MR = 1, RR = 0;
     for (int i = 0; i < p2.size() - 1; ++i) {
         if (matricsType == "dtw") {
             exactDTW(p1, p2, i, p2.size());

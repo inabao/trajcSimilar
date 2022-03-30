@@ -58,18 +58,39 @@ int main() {
 //    }
 
 
+//    varyLength(4, 8, "porto");
 //    varyLength(8, 12, "porto");
 //    varyLength(12, 16, "porto");
 //    varyLength(16, 20, "porto");
-//    varyLength(20, 24, "porto");
+//    varyLength(20, 40, "chengdu");
 //    varyLength(40, 60, "chengdu");
 //    varyLength(60, 80, "chengdu");
 //    varyLength(80, 100, "chengdu");
 //    varyLength(100, 120, "chengdu");
-//    varyLength(40, 60, "xian");
-//    varyLength(60, 80, "xian");
-    varyLength(80, 100, "xian");
+//    varyLength(80, 100, "xian");
 //    varyLength(100, 120, "xian");
+//    varyLength(120, 140, "xian");
+//    varyLength(140, 160, "xian");
+//    varyLength(160, 180, "xian");
+
+    varyDataSize(20);
+    varyDataSize(40);
+    varyDataSize(60);
+    varyDataSize(80);
+    varyDataSize(100);
+    varyDataSize(120);
+    varyDataSize(140);
+    varyDataSize(160);
+    varyDataSize(180);
+    varyDataSize(200);
+
+//    varyDataLength(200, 300);
+//    varyDataLength(300, 400);
+//    varyDataLength(400, 500);
+//    varyDataLength(500, 600);
+//    varyDataLength(600, 700);
+
+
 
 
 //    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
