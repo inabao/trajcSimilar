@@ -15,7 +15,7 @@ extern string gatherType;
 extern string dataType;
 extern long evaluateTime;
 extern long algorithmTime;
-
+extern int datasize;
 extern int maxLen;
 extern int minLen;
 void showResult(const string& algorithm, const path& p1, const path& p2);

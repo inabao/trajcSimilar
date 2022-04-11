@@ -7,6 +7,9 @@
 long evaluateTime = 0;
 long algorithmTime = 0;
 
+int datasize = -1;
+
+
 subResult execute(const string & algorithm, const path& p1, const path& p2){
     subResult result;
     if (algorithm == "efficientAlgorithm") {
@@ -218,7 +221,7 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
     int cal = 0;
     evaluateTime = 0;
     algorithmTime = 0;
-    cout << pruningType << "  " << dataType << "  " << matricsType << "  " << minLen << "  " << maxLen << "  " << algorithm << endl;
+    cout << gatherType << "  " << dataType << "  " << matricsType << "  " << minLen << "  " << maxLen << "  " << algorithm << endl;
     empty.second = MaxSimilar;
     map<int, vector<int>> pointGrid;
     map<int, vector<subResult>> record;
@@ -260,8 +263,10 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
     if (gatherType == "gridbase") {
         pointGrid = initGrid(points);
     }
-
-    for (int i = 0; i < paths.size(); ++i) {
+    if (datasize == -1) {
+        datasize = (int)paths.size();
+    }
+    for (int i = 0; i < datasize; ++i) {
         map<int, bool> multiLowBounds;
         if (gatherType == "gridbase") {
             multiLowBounds = multiLowBoundEstimateGridBase(pointGrid, paths[i], querys, 2);

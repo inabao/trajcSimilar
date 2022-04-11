@@ -133,6 +133,7 @@ void varyDataSize(int size) {
     maxLen = 100;
 
 
+    datasize = size;
     vector<int> querys;
     querys.reserve(100);
     for (int i = 0; i < 100; ++i) {
@@ -162,7 +163,6 @@ void varyQuerySize(int size) {
     minLen = 80;
     maxLen = 100;
 
-
     vector<int> querys;
     querys.reserve(100);
     for (int i = 0; i < size; ++i) {
@@ -179,9 +179,9 @@ void varyQuerySize(int size) {
             snprintf(targetString, sizeof targetString, datasource, dataType.c_str());
             string tmp(targetString);
             auto paths = readfile(tmp);
-            findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath + to_string(size) + "_", 1);
-            //            findMultiMostSimilar(paths, querys, "pss", filepath + "_" + to_string(size), 1);
-            findMultiMostSimilar(paths, querys, "pos", filepath + to_string(size) + "_", 1);
+//            findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath + to_string(size) + "_", 1);
+            findMultiMostSimilar(paths, querys, "pss", filepath + "_" + to_string(size), 1);
+//            findMultiMostSimilar(paths, querys, "pos", filepath + to_string(size) + "_", 1);
         }
     }
 }
