@@ -7,6 +7,12 @@
 long evaluateTime = 0;
 long algorithmTime = 0;
 
+double gridSize = 0.0001;
+double keyNum = 10;
+double fixRate = 0.6;
+
+double filterNum = 3;
+
 int datasize = -1;
 
 

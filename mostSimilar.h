@@ -14,11 +14,7 @@
 #include "exactS.h"
 #include "similarTrajectory.h"
 
-static double gridSize = 0.0001;
-static double keyNum = 10;
-static double fixRate = 0.6;
 
-static double filterNum = 3;
 
 extern string matricsType;
 extern string pruningType;

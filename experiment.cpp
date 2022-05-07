@@ -11,7 +11,7 @@ void showResult(const string& algorithm, const path& p1, const path& p2) {
     auto result = execute(algorithm, p1, p2);
     auto time_end = nowTime();
     calScore(p1, p2, result.first.first, result.first.second + 1);
-    printf("algorithm:%-20sstart:%-5dend:%-5dscore:%-10.4lfAR:%-10.4lfMR:%-10.4lfRR:%-10.4lfcost:%7dcost:%7d\n",
+    printf("algorithm:%-20sstart:%-5dend:%-5dscore:%-10.4lfAR:%-10.4lfMR:%-10.4lfRR:%-10.4lfcost:%7d\n",
            algorithm.c_str(),
            result.first.first,
            result.first.second,
@@ -20,7 +20,6 @@ void showResult(const string& algorithm, const path& p1, const path& p2) {
            MR,
            RR,
            time_end - time_start
-
            );
 }
 void findMostSimilar(const vector<path>& paths, int query, const string& algorithm, const string& targetFile, int limit) {
@@ -185,5 +184,92 @@ void varyQuerySize(int size) {
         }
     }
 }
+
+void varyGridSize() {
+    string dataset = "xian";
+    minLen = 80;
+    maxLen = 100;
+
+    vector<int> querys;
+    querys.reserve(10);
+    for (int i = 0; i < 10; ++i) {
+        querys.push_back(i);
+    }
+    char targetString[1024];
+    vector<double> size{0.0001, 0.00008, 0.00006, 0.00004, 0.00002};
+    matricsType = "erp";
+    vector<string> varyPrune{"gridbase"};
+    for (const auto &im : varyPrune) {
+        gatherType = im;
+        for (const auto &item : size) {
+            gridSize = item;
+            snprintf(targetString, sizeof targetString, datasource, dataType.c_str());
+            string tmp(targetString);
+            auto paths = readfile(tmp);
+            findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath + to_string(item) + "_", 1);
+//            findMultiMostSimilar(paths, querys, "pss", filepath + to_string(item) + "_", 1);
+//            findMultiMostSimilar(paths, querys, "pos", filepath + to_string(item) + "_", 1);
+        }
+    }
+}
+
+
+void varyRate() {
+    string dataset = "xian";
+    minLen = 80;
+    maxLen = 100;
+
+    vector<int> querys;
+    querys.reserve(100);
+    for (int i = 0; i < 100; ++i) {
+        querys.push_back(i);
+    }
+    char targetString[1024];
+    vector<double> size{0.2, 0.4, 0.6, 0.8, 1};
+    matricsType = "erp";
+    vector<string> varyPrune{"gridbase"};
+    for (const auto &im : varyPrune) {
+        gatherType = im;
+        for (const auto &item : size) {
+            fixRate = item;
+            snprintf(targetString, sizeof targetString, datasource, dataType.c_str());
+            string tmp(targetString);
+            auto paths = readfile(tmp);
+            findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath + to_string(item) + "_", 1);
+//            findMultiMostSimilar(paths, querys, "pss", filepath + to_string(item) + "_", 1);
+//            findMultiMostSimilar(paths, querys, "pos", filepath + to_string(item) + "_", 1);
+        }
+    }
+}
+
+void varyKeyNum() {
+    string dataset = "xian";
+    minLen = 80;
+    maxLen = 100;
+
+    vector<int> querys;
+    querys.reserve(100);
+    for (int i = 0; i < 100; ++i) {
+        querys.push_back(i);
+    }
+    char targetString[1024];
+    vector<double> size{5, 10, 15, 20};
+    matricsType = "erp";
+    vector<string> varyPrune{"gridbase"};
+    for (const auto &im : varyPrune) {
+        gatherType = im;
+        for (const auto &item : size) {
+            keyNum = item;
+//            filterNum = item / 2;
+            snprintf(targetString, sizeof targetString, datasource, dataType.c_str());
+            string tmp(targetString);
+            auto paths = readfile(tmp);
+            findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath + to_string(item) + "_", 1);
+            //        findMultiMostSimilar(paths, querys, "pss", filepath + to_string(item) + "_", 1);
+//            findMultiMostSimilar(paths, querys, "pos", filepath + to_string(item) + "_", 1);
+        }
+    }
+}
+
 
 
