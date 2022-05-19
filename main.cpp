@@ -32,10 +32,10 @@ int main() {
 //    for (auto & p2 : paths) {
 //        if (p2.size() < 10) continue;
 //        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
-//        showResult("efficientAlgorithm", p1, p2);
+////        showResult("efficientAlgorithm", p1, p2);
 //        showResult("exactS", p1, p2);
-//        showResult("pos", p1, p2);
-//        showResult("pss", p1, p2);
+////        showResult("pos", p1, p2);
+////        showResult("pss", p1, p2);
 //    }
 
 
@@ -73,16 +73,24 @@ int main() {
 //    varyLength(140, 160, "xian");
 //    varyLength(160, 180, "xian");
 
-    varyDataSize(20);
-    varyDataSize(40);
-    varyDataSize(60);
-    varyDataSize(80);
-    varyDataSize(100);
-    varyDataSize(120);
-    varyDataSize(140);
-    varyDataSize(160);
-    varyDataSize(180);
-    varyDataSize(200);
+//    varyQuerySize(20);
+//    varyQuerySize(40);
+//    varyQuerySize(60);
+//    varyQuerySize(80);
+//    varyQuerySize(100);
+//    varyQuerySize(120);
+//    varyQuerySize(140);
+//    varyQuerySize(160);
+//    varyQuerySize(180);
+//    varyQuerySize(200);
+
+
+//    varyDataSize(20000);
+//    varyDataSize(30000);
+//    varyDataSize(40000);
+//    varyDataSize(50000);
+//    varyDataSize(60000);
+//    varyDataSize(70000);
 
 //    varyDataLength(200, 300);
 //    varyDataLength(300, 400);
@@ -90,7 +98,9 @@ int main() {
 //    varyDataLength(500, 600);
 //    varyDataLength(600, 700);
 
-
+//     varyGridSize();
+//     varyKeyNum();
+//     varyRate();
 
 
 //    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
@@ -98,12 +108,12 @@ int main() {
 //    findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath, 1);
 //    findMostSimilar(paths, 649, "efficientAlgorithm", filepath, 2);
 
-//    string s1 = "aabccd";
-//    string s2 = "bacaabaccdda";
-//    auto p1 = str2path(s1);
-//    auto p2 = str2path(s2);
-////    showResult("efficientAlgorithm", p1, p2);
-//    showResult("exactS", p1, p2);
+    string s1 = "aabccd";
+    string s2 = "bacaabaccdda";
+    auto p1 = str2path(s1);
+    auto p2 = str2path(s2);
+//    showResult("efficientAlgorithm", p1, p2);
+    showResult("exactS", p1, p2);
 //    showResult("pss", p1, p2);
 
 //    string s1 = "bbaacbabc";

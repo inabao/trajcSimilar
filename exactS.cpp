@@ -58,7 +58,7 @@ double exactLcssDistance(path path1, path path2, int start, int end) {
             }
             distanceMatrix[j - start] = min(distanceMatrix[j - start - 1] + distance(nullPoint, path2[j-1]),
                                                 distanceMatrixTmp[j - start] + distance(nullPoint, path1[i-1]));
-            if (abs(i - (j - start + 1)) < 3) {
+            if (abs(i - (j - start + 1)) < minThreshold) {
                 distanceMatrix[j - start] = min(distanceMatrix[j - start], distanceMatrixTmp[j - start - 1] + distance(path1[i-1], path2[j-1]));
             }
         }

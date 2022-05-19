@@ -6,7 +6,11 @@
 #include "exactS.h"
 
 
-string matricsType = "erp";
+string matricsType = "lcss";
+
+int minThreshold = 3;
+
+
 string pruningType = "pointprune";
 string gatherType = "gridbase";
 string dataType = "xian";

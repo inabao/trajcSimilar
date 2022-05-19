@@ -13,6 +13,7 @@ extern string matricsType;
 extern string pruningType;
 extern string gatherType;
 extern string dataType;
+extern int minThreshold;
 
 extern double AR;
 extern double RR;
