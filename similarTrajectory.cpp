@@ -159,9 +159,74 @@ subResult efficientAlgorithmDTW(path path1, path path2) {
     return r;
 }
 
+subResult efficientAlgorithmFC(path path1, path path2) {
+    int lenPath1 = path1.size();
+    int lenPath2 = path2.size();
+    auto allCost = new double[path2.size()];
+    auto allCostTmp = new double[path2.size()];
+    auto starts = new int[path2.size()];
+    auto startsTmp = new int[path2.size()];
+    double empty[lenPath1];
+    for (int i = 0; i < lenPath1; ++i) {
+        if (i == 0) {
+            empty[i] = pointDistance(path2[0], path1[i]);
+        } else {
+            empty[i] = max(empty[i - 1], pointDistance(path2[0], path1[i]));
+        }
+    }
+    for (int i = 0; i < lenPath1; ++i) {
+        for (int j = 0; j < lenPath2; ++j) {
+            if (i == 0) {
+                starts[j] = j;
+                allCost[j] = pointDistance(path1[0], path2[j]);
+            } else {
+                if (j == 0) {
+                    starts[0] = 0;
+                    allCost[0] = min(max(allCostTmp[0], pointDistance(path2[0], path1[i])), max(empty[i-1],pointDistance(path1[i], path2[0])));
+                    continue;
+                }
+                if (allCostTmp[j] >= allCostTmp[j - 1]) {
+                    starts[j] = startsTmp[j - 1];
+                } else {
+                    starts[j] = startsTmp[j];
+                }
+                if (allCostTmp[j] > allCost[j-1] && allCostTmp[j - 1] > allCost[j-1]) {
+                    starts[j] = starts[j - 1];
+                }
+                allCost[j] = max(min(allCostTmp[j], min(allCostTmp[j - 1], allCost[j-1])), pointDistance(path1[i], path2[j]));
+            }
+        }
+        swap(allCost,allCostTmp);
+        swap(starts, startsTmp);
+    }
+    int start;
+    int end = 0;
+    double res = allCostTmp[0];
+    for (int j = 0; j < lenPath2; ++j) {
+        if (res > allCostTmp[j]) {
+            res = min(res, allCostTmp[j]);
+            end = j;
+        }
+    }
+    start = startsTmp[end];
+    delete[] allCostTmp;
+    delete[] allCost;
+    delete[] starts;
+    delete[] startsTmp;
+    subResult r;
+    r.first.first = start;
+    r.first.second = end;
+    r.second = res;
+    return r;
+}
+
+
+
 subResult efficientAlgorithm(const path& path1, const path& path2) {
     if (matricsType == "dtw") {
         return efficientAlgorithmDTW(path1, path2);
+    } else if(matricsType == "FC") {
+        return efficientAlgorithmFC(path1, path2);
     } else {
         return efficientAlgorithmWED(path1, path2);
     }

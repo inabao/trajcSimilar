@@ -40,6 +40,37 @@ double exactWedDistance(path path1, path path2, int start, int end) {
     return minDistance;
 }
 
+double exactFC(path path1, path path2, int start, int end) {
+    auto distanceMatrix = new double[end - start + 1];
+    auto distanceMatrixTmp = new double[end - start + 1];
+    double minDistance = 1000000;
+    distanceMatrixTmp[0] = 0;
+    for (int j = start + 1; j < end + 1; ++j) {
+        distanceMatrixTmp[j - start] = max(distanceMatrixTmp[j - start - 1], pointDistance(path2[j - 1], path1[start]));
+    }
+    for (int i = 1; i < path1.size() + 1; ++i) {
+        for (int j = start; j < end + 1; ++j) {
+            if (j == start) {
+                distanceMatrix[0] = max(distanceMatrixTmp[0], pointDistance(path1[i-1], path2[start]));
+                continue;
+            }
+            distanceMatrix[j - start] = max(pointDistance(path1[i-1], path2[j-1]), min(distanceMatrixTmp[j - start - 1],
+                                            min(distanceMatrix[j - start - 1],
+                                                distanceMatrixTmp[j - start])));
+        }
+        swap(distanceMatrixTmp, distanceMatrix);
+    }
+    for (int i = 1; i < end - start + 1; ++i) {
+        if (distanceMatrixTmp[i] < AR) MR += 1;
+        if (distanceMatrixTmp[i] < minDistance) {
+            tmpend = i - 1;
+            minDistance = distanceMatrixTmp[i];
+        }
+    }
+    delete[] distanceMatrixTmp;
+    delete[] distanceMatrix;
+    return minDistance;
+}
 
 
 double exactLcssDistance(path path1, path path2, int start, int end) {
@@ -119,6 +150,8 @@ subResult exactS(const path& p1, const path& p2) {
             distance = exactDTW(p1, p2, i, p2.size());
         } else if (matricsType == "lcss") {
             distance = exactLcssDistance(p1, p2, i, p2.size());
+        } else if (matricsType == "FC"){
+            distance = exactFC(p1, p2, i, p2.size());
         } else {
             distance = exactWedDistance(p1, p2, i, p2.size());
         }

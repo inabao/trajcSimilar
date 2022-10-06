@@ -82,8 +82,8 @@ subResult pssDTW(path p1, path p2) {
 
     int start = 0;
     int end = p2.size();
-    reverse(p1.begin(), p1.end());
-    reverse(p2.begin(), p2.end());
+//    reverse(p1.begin(), p1.end());
+//    reverse(p2.begin(), p2.end());
     auto distanceMatrix = new double[end - start + 1];
     auto distanceMatrixTmp = new double[end - start + 1];
     distanceMatrixTmp[0] = 0;

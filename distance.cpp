@@ -6,7 +6,7 @@
 #include "exactS.h"
 
 
-string matricsType = "lcss";
+string matricsType = "FC";
 
 int minThreshold = 3;
 
