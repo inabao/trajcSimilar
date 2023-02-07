@@ -150,13 +150,15 @@ vector<path> mostSimilar(vector<path> paths, int query, const string& algorithm,
     return {};
 }
 
-map<int, bool> multiLowBoundEstimate(map<int, vector<point>> points, const path& p, const vector<path>& paths,map<int, double> &lowerBounds, int skip) {
+map<int, bool> keyPointFilter(map<int, vector<point>> points, const path& p, const vector<path>& paths, map<int, double> &lowerBounds, int skip, map<int, bool>& multiLowBounds) {
     map<int, vector<double>> result;
     for (const auto &item : points) {
+        if (!multiLowBounds[item.first]) continue;
         result[item.first] = vector<double>(filterNum, MaxSimilar);
     }
     for (int i = 0; i < p.size(); i += skip) {
         for (auto & po : points) {
+            if (!multiLowBounds[po.first]) continue;
             for (int k = 0; k < filterNum; ++k) {
                 if (matricsType == "dtw") {
                     result[po.first][k] = min(result[po.first][k], pointDistance(po.second[k], p[i]));
@@ -169,6 +171,7 @@ map<int, bool> multiLowBoundEstimate(map<int, vector<point>> points, const path&
     map<int, bool> search;
     for (const auto &item : result) {
         search[item.first] = lowerBounds[item.first] > (accumulate(begin(item.second), end(item.second), 0.0) / item.second.size()) * paths[item.first].size();
+        search[item.first] &= multiLowBounds[item.first];
     }
     return search;
 }
@@ -197,7 +200,7 @@ map<int, vector<int>> initGrid(const map<int, vector<point>>& points) {
 
 
 
-map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, const path& p, const vector<int>& querys, int skip) {
+map<int, bool> gridBasePruning(map<int, vector<int>> pointGrid, const path& p, const vector<int>& querys, int skip, map<int, bool> multiLowBounds) {
     map<int, int> count;
     for (int i = 0; i < p.size(); i += skip) {
         auto gridid = gps2gridid(p[i].first, p[i].second);
@@ -216,6 +219,7 @@ map<int, bool> multiLowBoundEstimateGridBase(map<int, vector<int>> pointGrid, co
     map<int, bool> search;
     for (const auto &item : querys) {
         search[item] = count[item] > keyNum * fixRate;
+        search[item] &= multiLowBounds[item];
     }
     return search;
 }
@@ -266,7 +270,7 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
         }
         lowerBound[item] = MaxSimilar;
     }
-    if (gatherType == "gridbase") {
+    if (gatherType == "gridbase" || gatherType == "both") {
         pointGrid = initGrid(points);
     }
     if (datasize == -1) {
@@ -274,10 +278,14 @@ map<int, map<int, pair<vector<double>,subResult>>> multiSimilar(const vector<pat
     }
     for (int i = 0; i < datasize; ++i) {
         map<int, bool> multiLowBounds;
-        if (gatherType == "gridbase") {
-            multiLowBounds = multiLowBoundEstimateGridBase(pointGrid, paths[i], querys, 2);
-        } else {
-            multiLowBounds = multiLowBoundEstimate(points, paths[i], paths, lowerBound, 2);
+        for (const auto &item : querys) {
+            multiLowBounds[item] = true;
+        }
+        if (gatherType == "gridbase" || gatherType == "both") {
+            multiLowBounds = gridBasePruning(pointGrid, paths[i], querys, 2, multiLowBounds);
+        }
+        if (gatherType == "keyfilter" || gatherType == "both") {
+            multiLowBounds = keyPointFilter(points, paths[i], paths, lowerBound, 2, multiLowBounds);
         }
         for (const auto &query : querys) {
             auto queryPath = queryPaths[query];

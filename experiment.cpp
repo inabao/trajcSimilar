@@ -78,8 +78,8 @@ void varyLength(int l, int r, string dataset) {
     for (int i = 0; i < 100; ++i) {
         querys.push_back(i);
     }
-    vector<string> varyPrune{"gridbase", "none"};
-    vector<string> metrics{"erp"};
+    vector<string> varyPrune{"gridbase"};
+    vector<string> metrics{"FC"};
     char targetString[1024];
     dataType = dataset;
     for (const auto &pr : varyPrune) {
@@ -90,8 +90,8 @@ void varyLength(int l, int r, string dataset) {
             string tmp(targetString);
             auto paths = readfile(tmp);
             findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath, 1);
-//            findMultiMostSimilar(paths, querys, "pss", filepath, 1);
-//            findMultiMostSimilar(paths, querys, "pos", filepath, 1);
+            findMultiMostSimilar(paths, querys, "pss", filepath, 1);
+            findMultiMostSimilar(paths, querys, "pos", filepath, 1);
         }
     }
 }
@@ -103,12 +103,12 @@ void varyDataLength(int l, int r) {
 
 
     vector<int> querys;
-    querys.reserve(100);
-    for (int i = 0; i < 100; ++i) {
+    querys.reserve(1);
+    for (int i = 0; i < 1; ++i) {
         querys.push_back(i);
     }
-    vector<string> varyPrune{"gridbase", "none"};
-    vector<string> metrics{"edr", "dtw", "erp"};
+    vector<string> varyPrune{"gridbase"};
+    vector<string> metrics{"edr", "dtw", "erp", "FC"};
     char targetString[1024];
     dataType = dataset;
     for (const auto &pr : varyPrune) {
@@ -163,7 +163,7 @@ void varyQuerySize(int size) {
     maxLen = 100;
 
     vector<int> querys;
-    querys.reserve(100);
+    querys.reserve(size);
     for (int i = 0; i < size; ++i) {
         querys.push_back(i);
     }
@@ -191,8 +191,8 @@ void varyGridSize() {
     maxLen = 100;
 
     vector<int> querys;
-    querys.reserve(10);
-    for (int i = 0; i < 10; ++i) {
+    querys.reserve(1);
+    for (int i = 0; i < 1; ++i) {
         querys.push_back(i);
     }
     char targetString[1024];
@@ -220,8 +220,8 @@ void varyRate() {
     maxLen = 100;
 
     vector<int> querys;
-    querys.reserve(100);
-    for (int i = 0; i < 100; ++i) {
+    querys.reserve(1);
+    for (int i = 0; i < 1; ++i) {
         querys.push_back(i);
     }
     char targetString[1024];
@@ -248,7 +248,7 @@ void varyKeyNum() {
     maxLen = 100;
 
     vector<int> querys;
-    querys.reserve(100);
+    querys.reserve(1);
     for (int i = 0; i < 100; ++i) {
         querys.push_back(i);
     }

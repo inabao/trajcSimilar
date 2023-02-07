@@ -6,7 +6,7 @@
 #include "exactS.h"
 
 
-string matricsType = "FC";
+string matricsType = "dtw"; // erp, edr, FC, dtw
 
 int minThreshold = 3;
 

@@ -174,6 +174,8 @@ void calScore(const path& p1, const path& p2, int start, int end) {
     for (int i = 0; i < p2.size() - 1; ++i) {
         if (matricsType == "dtw") {
             exactDTW(p1, p2, i, p2.size());
+        } else if (matricsType == "FC"){
+            exactFC(p1, p2, i, p2.size());
         } else if (matricsType == "lcss") {
             exactLcssDistance(p1, p2, i, p2.size());
         } else {

@@ -25,18 +25,18 @@ int main() {
 //        querys.clear();
 //    }
 
-    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
-    path p1 = paths[8];
-    int i = 0;
-//        path p2 = paths[8];
-    for (auto & p2 : paths) {
-        if (p2.size() < 10) continue;
-        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
-        showResult("efficientAlgorithm", p1, p2);
-        showResult("exactS", p1, p2);
-//        showResult("pos", p1, p2);
-//        showResult("pss", p1, p2);
-    }
+//    auto paths = readfile(R"(E:\project\work\xian_data\trajectory\tra_20161001)");
+//    path p1 = paths[8];
+//    int i = 0;
+////        path p2 = paths[8];
+//    for (auto & p2 : paths) {
+//        if (p2.size() < 10) continue;
+//        cout << i++ << "  " << p1.size() << "  " << p2.size() << endl;
+//        showResult("efficientAlgorithm", p1, p2);
+//        showResult("exactS", p1, p2);
+////        showResult("pos", p1, p2);
+////        showResult("pss", p1, p2);
+//    }
 
 
 
@@ -107,14 +107,14 @@ int main() {
 //    vector<int> querys{649};
 //    findMultiMostSimilar(paths, querys, "efficientAlgorithm", filepath, 1);
 //    findMostSimilar(paths, 649, "efficientAlgorithm", filepath, 2);
-
-//    string s1 = "8945128451248657";
-//    string s2 = "9481659841637894616841131216574121965023657864513246364124863125628965130";
-//    auto p1 = str2path(s1);
-//    auto p2 = str2path(s2);
-////    showResult("efficientAlgorithm", p1, p2);
-////    showResult("exactS", p1, p2);
+//
+    string s1 = "8945128451248657";
+    string s2 = "94816278876894512845124865745647628965130";
+    auto p1 = str2path(s1);
+    auto p2 = str2path(s2);
 //    showResult("efficientAlgorithm", p1, p2);
+    showResult("exactS", p1, p2);
+    showResult("efficientAlgorithm", p1, p2);
 
 //    string s1 = "bbaacbabc";
 //    string s2 = "bacaabacc";
